@@ -1,0 +1,32 @@
+{
+  "version": "20.0.0",
+  "files": {
+    "4a65f8b4ae00dabc5dfb92c6357977a30dc1058233ba7ab4a5d8ec98fdca630c": {
+      "source": {
+        "path": "asset.4a65f8b4ae00dabc5dfb92c6357977a30dc1058233ba7ab4a5d8ec98fdca630c",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "4a65f8b4ae00dabc5dfb92c6357977a30dc1058233ba7ab4a5d8ec98fdca630c.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "d57e4f0152c3e9f352f144c12500683ef74bccc297186cdcfa985836e9d71430": {
+      "source": {
+        "path": "ApnaAppsyncDynamodbLambdaDataSourceStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "d57e4f0152c3e9f352f144c12500683ef74bccc297186cdcfa985836e9d71430.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,0 +1,19 @@
+{
+  "version": "20.0.0",
+  "files": {
+    "e8667412ae19c6ee95fd82981a3d686df5ad9876e794827922d238cfc3bdbb52": {
+      "source": {
+        "path": "ApnaAppsyncDynamodbDatasourceStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "e8667412ae19c6ee95fd82981a3d686df5ad9876e794827922d238cfc3bdbb52.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
