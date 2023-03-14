@@ -1,0 +1,1043 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.1.175"
+        }
+      },
+      "ApnaAppsyncDynamodbIndexQueriesStack": {
+        "id": "ApnaAppsyncDynamodbIndexQueriesStack",
+        "path": "ApnaAppsyncDynamodbIndexQueriesStack",
+        "children": {
+          "api": {
+            "id": "api",
+            "path": "ApnaAppsyncDynamodbIndexQueriesStack/api",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLApi",
+                  "aws:cdk:cloudformation:props": {
+                    "authenticationType": "API_KEY",
+                    "name": "appsync-dynodb-query-api"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnGraphQLApi",
+                  "version": "2.34.2"
+                }
+              },
+              "Schema": {
+                "id": "Schema",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/Schema",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLSchema",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "apiC8550315",
+                        "ApiId"
+                      ]
+                    },
+                    "definition": "type Todo {\n  username: String!\n  id: ID!\n  title: String!\n  done: Boolean!\n  year: Int!\n}\n\ninput TodoInput {\n  username: String!\n  id: ID!\n  title: String!\n  done: Boolean!\n  year: Int!\n}\n\ninput UpdateTodoInput {\n  username: String!\n  id: ID!\n  title: String!\n  done: Boolean\n  year: Int\n}\n\ninput TodoByUsernameAndTitleInput {\n  username: String!\n  title: String!\n}\n\ninput TodoByUsernameAndIdInput {\n  username: String!\n  id: ID!\n}\n\ninput TodosByUsernameAndYearInput {\n  username: String!\n  year: Int!\n}\n\ninput TodosByYearAndTitleInput {\n  title: String!\n  year: Int!\n}\n\ninput DeleteTodoInput {\n  title: String!\n  username: String!\n}\n\ntype Query {\n  getTodos: [Todo]\n  getTodoByUsername(username: String!): [Todo]\n  getTodoByUsernameAndTitle(input: TodoByUsernameAndTitleInput!): [Todo]\n  getTodoByUsernameAndId(input: TodoByUsernameAndIdInput!): [Todo]\n  getTodosByUsernameAndYear(input: TodosByUsernameAndYearInput!): [Todo]\n  getTodosByYearAndTitle(input: TodosByYearAndTitleInput!): [Todo]\n}\n\ntype Mutation {\n  addTodo(todo: TodoInput!): Todo\n  updateTodo(todo: UpdateTodoInput!): Todo\n  deleteTodo(input: DeleteTodoInput!): String\n}\n"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnGraphQLSchema",
+                  "version": "2.34.2"
+                }
+              },
+              "DefaultApiKey": {
+                "id": "DefaultApiKey",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/DefaultApiKey",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::ApiKey",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "apiC8550315",
+                        "ApiId"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnApiKey",
+                  "version": "2.34.2"
+                }
+              },
+              "LogGroup": {
+                "id": "LogGroup",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/LogGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.34.2"
+                }
+              },
+              "lambdaDatasource": {
+                "id": "lambdaDatasource",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "appsync.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.34.2"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "lambda:InvokeFunction",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "AppsyncTodoHandler9E3CDF55",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "AppsyncTodoHandler9E3CDF55",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              ":*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apilambdaDatasourceServiceRoleDefaultPolicyB4A8469E",
+                                "roles": [
+                                  {
+                                    "Ref": "apilambdaDatasourceServiceRole0AF6D7BD"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.34.2"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.34.2"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::DataSource",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "apiC8550315",
+                            "ApiId"
+                          ]
+                        },
+                        "name": "lambdaDatasource",
+                        "type": "AWS_LAMBDA",
+                        "lambdaConfig": {
+                          "lambdaFunctionArn": {
+                            "Fn::GetAtt": [
+                              "AppsyncTodoHandler9E3CDF55",
+                              "Arn"
+                            ]
+                          }
+                        },
+                        "serviceRoleArn": {
+                          "Fn::GetAtt": [
+                            "apilambdaDatasourceServiceRole0AF6D7BD",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_appsync.CfnDataSource",
+                      "version": "2.34.2"
+                    }
+                  },
+                  "QuerygetTodosResolver": {
+                    "id": "QuerygetTodosResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "getTodos",
+                            "typeName": "Query",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "QuerygetTodoByUsernameResolver": {
+                    "id": "QuerygetTodoByUsernameResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "getTodoByUsername",
+                            "typeName": "Query",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "QuerygetTodoByUsernameAndTitleResolver": {
+                    "id": "QuerygetTodoByUsernameAndTitleResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndTitleResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndTitleResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "getTodoByUsernameAndTitle",
+                            "typeName": "Query",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "QuerygetTodoByUsernameAndIdResolver": {
+                    "id": "QuerygetTodoByUsernameAndIdResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndIdResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndIdResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "getTodoByUsernameAndId",
+                            "typeName": "Query",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "QuerygetTodosByUsernameAndYearResolver": {
+                    "id": "QuerygetTodosByUsernameAndYearResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByUsernameAndYearResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByUsernameAndYearResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "getTodosByUsernameAndYear",
+                            "typeName": "Query",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "QuerygetTodosByYearAndTitleResolver": {
+                    "id": "QuerygetTodosByYearAndTitleResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByYearAndTitleResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByYearAndTitleResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "getTodosByYearAndTitle",
+                            "typeName": "Query",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "MutationaddTodoResolver": {
+                    "id": "MutationaddTodoResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationaddTodoResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationaddTodoResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "addTodo",
+                            "typeName": "Mutation",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "MutationupdateTodoResolver": {
+                    "id": "MutationupdateTodoResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationupdateTodoResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationupdateTodoResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "updateTodo",
+                            "typeName": "Mutation",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  },
+                  "MutationdeleteTodoResolver": {
+                    "id": "MutationdeleteTodoResolver",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationdeleteTodoResolver",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationdeleteTodoResolver/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "apiC8550315",
+                                "ApiId"
+                              ]
+                            },
+                            "fieldName": "deleteTodo",
+                            "typeName": "Mutation",
+                            "dataSourceName": "lambdaDatasource",
+                            "kind": "UNIT"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-appsync-alpha.Resolver",
+                      "version": "2.51.1-alpha.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-appsync-alpha.LambdaDataSource",
+                  "version": "2.51.1-alpha.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-appsync-alpha.GraphqlApi",
+              "version": "2.51.1-alpha.0"
+            }
+          },
+          "TodosTable": {
+            "id": "TodosTable",
+            "path": "ApnaAppsyncDynamodbIndexQueriesStack/TodosTable",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/TodosTable/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "keySchema": [
+                      {
+                        "attributeName": "username",
+                        "keyType": "HASH"
+                      },
+                      {
+                        "attributeName": "title",
+                        "keyType": "RANGE"
+                      }
+                    ],
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "username",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "title",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "year",
+                        "attributeType": "N"
+                      }
+                    ],
+                    "billingMode": "PAY_PER_REQUEST",
+                    "globalSecondaryIndexes": [
+                      {
+                        "indexName": "Todos-Title-Year-Index",
+                        "keySchema": [
+                          {
+                            "attributeName": "year",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "title",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      }
+                    ],
+                    "localSecondaryIndexes": [
+                      {
+                        "indexName": "Todos-Year-Index",
+                        "keySchema": [
+                          {
+                            "attributeName": "username",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "year",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      }
+                    ],
+                    "streamSpecification": {
+                      "streamViewType": "NEW_IMAGE"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
+                  "version": "2.34.2"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/TodosTable/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.34.2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "version": "2.34.2"
+            }
+          },
+          "StreamHandlerDyanmodb": {
+            "id": "StreamHandlerDyanmodb",
+            "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.34.2"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "dynamodb:ListStreams",
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                },
+                                {
+                                  "Action": [
+                                    "dynamodb:DescribeStream",
+                                    "dynamodb:GetRecords",
+                                    "dynamodb:GetShardIterator"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "TodosTable250330D8",
+                                      "StreamArn"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "StreamHandlerDyanmodbServiceRoleDefaultPolicy631B27F3",
+                            "roles": [
+                              {
+                                "Ref": "StreamHandlerDyanmodbServiceRoleA7F59589"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.34.2"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.34.2"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.34.2"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.34.2"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.34.2"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "s3Key": "721c942ae113dfdac2a3a87e175a0ceda4414f3c93dc0ff51a1ef8ce8dca94ca.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "StreamHandlerDyanmodbServiceRoleA7F59589",
+                        "Arn"
+                      ]
+                    },
+                    "functionName": "TableStreamHandler",
+                    "handler": "index.handler",
+                    "runtime": "nodejs16.x"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.34.2"
+                }
+              },
+              "DynamoDBEventSource:ApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21D": {
+                "id": "DynamoDBEventSource:ApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21D",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/DynamoDBEventSource:ApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21D",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/DynamoDBEventSource:ApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21D/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::EventSourceMapping",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "StreamHandlerDyanmodb1FAA4829"
+                        },
+                        "batchSize": 100,
+                        "eventSourceArn": {
+                          "Fn::GetAtt": [
+                            "TodosTable250330D8",
+                            "StreamArn"
+                          ]
+                        },
+                        "startingPosition": "LATEST"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnEventSourceMapping",
+                      "version": "2.34.2"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.EventSourceMapping",
+                  "version": "2.34.2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.34.2"
+            }
+          },
+          "AppsyncTodoHandler": {
+            "id": "AppsyncTodoHandler",
+            "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.34.2"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "dynamodb:*",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "TodosTable250330D8",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "TodosTable250330D8",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/index/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "AppsyncTodoHandlerServiceRoleDefaultPolicy52B1EBC6",
+                            "roles": [
+                              {
+                                "Ref": "AppsyncTodoHandlerServiceRoleF32CB4D0"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.34.2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.34.2"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.34.2"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.34.2"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.34.2"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.34.2"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "s3Key": "9f7b825e7048520c04dc89ad6b8b9745629f855b18a3d91c6679b6fb14196dbe.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "AppsyncTodoHandlerServiceRoleF32CB4D0",
+                        "Arn"
+                      ]
+                    },
+                    "environment": {
+                      "variables": {
+                        "TODOS_TABLE": {
+                          "Ref": "TodosTable250330D8"
+                        },
+                        "TODOS_TITLE_YEAR_INDEX": "Todos-Title-Year-Index",
+                        "TODOS_YEAR_INDEX": "Todos-Year-Index"
+                      }
+                    },
+                    "handler": "main.handler",
+                    "memorySize": 1024,
+                    "runtime": "nodejs16.x"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.34.2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.34.2"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "ApnaAppsyncDynamodbIndexQueriesStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.34.2"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "ApnaAppsyncDynamodbIndexQueriesStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.34.2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.175"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.34.2"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.34.2"
+    }
+  }
+}

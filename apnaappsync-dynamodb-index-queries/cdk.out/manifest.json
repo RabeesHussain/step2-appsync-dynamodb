@@ -1,0 +1,208 @@
+{
+  "version": "20.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "ApnaAppsyncDynamodbIndexQueriesStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ApnaAppsyncDynamodbIndexQueriesStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ApnaAppsyncDynamodbIndexQueriesStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "ApnaAppsyncDynamodbIndexQueriesStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1547d6240009337fbc48bb970dfa79f820c73ed31e0723a250ae8b886ce5347a.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ApnaAppsyncDynamodbIndexQueriesStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ApnaAppsyncDynamodbIndexQueriesStack.assets"
+      ],
+      "metadata": {
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiC8550315"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/Schema": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiSchema0EA92056"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/DefaultApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiDefaultApiKey6AB8D7C4"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceServiceRole0AF6D7BD"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceServiceRoleDefaultPolicyB4A8469E"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasource56031DFE"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceQuerygetTodosResolverBD178C2D"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceQuerygetTodoByUsernameResolverFDBEFBE9"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndTitleResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceQuerygetTodoByUsernameAndTitleResolverDF7B0B12"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndIdResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceQuerygetTodoByUsernameAndIdResolver48508796"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByUsernameAndYearResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceQuerygetTodosByUsernameAndYearResolverA2046A60"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByYearAndTitleResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceQuerygetTodosByYearAndTitleResolverBBA2F97D"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationaddTodoResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceMutationaddTodoResolver08E72EC5"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationupdateTodoResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceMutationupdateTodoResolverDB478099"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationdeleteTodoResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apilambdaDatasourceMutationdeleteTodoResolver68685364"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/TodosTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TodosTable250330D8"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamHandlerDyanmodbServiceRoleA7F59589"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamHandlerDyanmodbServiceRoleDefaultPolicy631B27F3"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamHandlerDyanmodb1FAA4829"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/DynamoDBEventSource:ApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21D/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StreamHandlerDyanmodbDynamoDBEventSourceApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21DA529FEC3"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AppsyncTodoHandlerServiceRoleF32CB4D0"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AppsyncTodoHandlerServiceRoleDefaultPolicy52B1EBC6"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AppsyncTodoHandler9E3CDF55"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ApnaAppsyncDynamodbIndexQueriesStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ApnaAppsyncDynamodbIndexQueriesStack"
+    }
+  }
+}

@@ -1,0 +1,890 @@
+{
+ "Resources": {
+  "apiC8550315": {
+   "Type": "AWS::AppSync::GraphQLApi",
+   "Properties": {
+    "AuthenticationType": "API_KEY",
+    "Name": "appsync-dynodb-query-api"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/Resource"
+   }
+  },
+  "apiSchema0EA92056": {
+   "Type": "AWS::AppSync::GraphQLSchema",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "Definition": "type Todo {\n  username: String!\n  id: ID!\n  title: String!\n  done: Boolean!\n  year: Int!\n}\n\ninput TodoInput {\n  username: String!\n  id: ID!\n  title: String!\n  done: Boolean!\n  year: Int!\n}\n\ninput UpdateTodoInput {\n  username: String!\n  id: ID!\n  title: String!\n  done: Boolean\n  year: Int\n}\n\ninput TodoByUsernameAndTitleInput {\n  username: String!\n  title: String!\n}\n\ninput TodoByUsernameAndIdInput {\n  username: String!\n  id: ID!\n}\n\ninput TodosByUsernameAndYearInput {\n  username: String!\n  year: Int!\n}\n\ninput TodosByYearAndTitleInput {\n  title: String!\n  year: Int!\n}\n\ninput DeleteTodoInput {\n  title: String!\n  username: String!\n}\n\ntype Query {\n  getTodos: [Todo]\n  getTodoByUsername(username: String!): [Todo]\n  getTodoByUsernameAndTitle(input: TodoByUsernameAndTitleInput!): [Todo]\n  getTodoByUsernameAndId(input: TodoByUsernameAndIdInput!): [Todo]\n  getTodosByUsernameAndYear(input: TodosByUsernameAndYearInput!): [Todo]\n  getTodosByYearAndTitle(input: TodosByYearAndTitleInput!): [Todo]\n}\n\ntype Mutation {\n  addTodo(todo: TodoInput!): Todo\n  updateTodo(todo: UpdateTodoInput!): Todo\n  deleteTodo(input: DeleteTodoInput!): String\n}\n"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/Schema"
+   }
+  },
+  "apiDefaultApiKey6AB8D7C4": {
+   "Type": "AWS::AppSync::ApiKey",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    }
+   },
+   "DependsOn": [
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/DefaultApiKey"
+   }
+  },
+  "apilambdaDatasourceServiceRole0AF6D7BD": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole/Resource"
+   }
+  },
+  "apilambdaDatasourceServiceRoleDefaultPolicyB4A8469E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "AppsyncTodoHandler9E3CDF55",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "AppsyncTodoHandler9E3CDF55",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "apilambdaDatasourceServiceRoleDefaultPolicyB4A8469E",
+    "Roles": [
+     {
+      "Ref": "apilambdaDatasourceServiceRole0AF6D7BD"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "apilambdaDatasource56031DFE": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "Name": "lambdaDatasource",
+    "Type": "AWS_LAMBDA",
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "AppsyncTodoHandler9E3CDF55",
+       "Arn"
+      ]
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "apilambdaDatasourceServiceRole0AF6D7BD",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/Resource"
+   }
+  },
+  "apilambdaDatasourceQuerygetTodosResolverBD178C2D": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getTodos",
+    "TypeName": "Query",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceQuerygetTodoByUsernameResolverFDBEFBE9": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getTodoByUsername",
+    "TypeName": "Query",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceQuerygetTodoByUsernameAndTitleResolverDF7B0B12": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getTodoByUsernameAndTitle",
+    "TypeName": "Query",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndTitleResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceQuerygetTodoByUsernameAndIdResolver48508796": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getTodoByUsernameAndId",
+    "TypeName": "Query",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodoByUsernameAndIdResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceQuerygetTodosByUsernameAndYearResolverA2046A60": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getTodosByUsernameAndYear",
+    "TypeName": "Query",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByUsernameAndYearResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceQuerygetTodosByYearAndTitleResolverBBA2F97D": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "getTodosByYearAndTitle",
+    "TypeName": "Query",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/QuerygetTodosByYearAndTitleResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceMutationaddTodoResolver08E72EC5": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "addTodo",
+    "TypeName": "Mutation",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationaddTodoResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceMutationupdateTodoResolverDB478099": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "updateTodo",
+    "TypeName": "Mutation",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationupdateTodoResolver/Resource"
+   }
+  },
+  "apilambdaDatasourceMutationdeleteTodoResolver68685364": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "apiC8550315",
+      "ApiId"
+     ]
+    },
+    "FieldName": "deleteTodo",
+    "TypeName": "Mutation",
+    "DataSourceName": "lambdaDatasource",
+    "Kind": "UNIT"
+   },
+   "DependsOn": [
+    "apilambdaDatasource56031DFE",
+    "apiSchema0EA92056"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/api/lambdaDatasource/MutationdeleteTodoResolver/Resource"
+   }
+  },
+  "TodosTable250330D8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "username",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "title",
+      "KeyType": "RANGE"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "username",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "title",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "year",
+      "AttributeType": "N"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "Todos-Title-Year-Index",
+      "KeySchema": [
+       {
+        "AttributeName": "year",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "title",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "LocalSecondaryIndexes": [
+     {
+      "IndexName": "Todos-Year-Index",
+      "KeySchema": [
+       {
+        "AttributeName": "username",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "year",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "StreamSpecification": {
+     "StreamViewType": "NEW_IMAGE"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/TodosTable/Resource"
+   }
+  },
+  "StreamHandlerDyanmodbServiceRoleA7F59589": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole/Resource"
+   }
+  },
+  "StreamHandlerDyanmodbServiceRoleDefaultPolicy631B27F3": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "dynamodb:ListStreams",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "dynamodb:DescribeStream",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "TodosTable250330D8",
+         "StreamArn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "StreamHandlerDyanmodbServiceRoleDefaultPolicy631B27F3",
+    "Roles": [
+     {
+      "Ref": "StreamHandlerDyanmodbServiceRoleA7F59589"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "StreamHandlerDyanmodb1FAA4829": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "721c942ae113dfdac2a3a87e175a0ceda4414f3c93dc0ff51a1ef8ce8dca94ca.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "StreamHandlerDyanmodbServiceRoleA7F59589",
+      "Arn"
+     ]
+    },
+    "FunctionName": "TableStreamHandler",
+    "Handler": "index.handler",
+    "Runtime": "nodejs16.x"
+   },
+   "DependsOn": [
+    "StreamHandlerDyanmodbServiceRoleDefaultPolicy631B27F3",
+    "StreamHandlerDyanmodbServiceRoleA7F59589"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/Resource",
+    "aws:asset:path": "asset.721c942ae113dfdac2a3a87e175a0ceda4414f3c93dc0ff51a1ef8ce8dca94ca",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "StreamHandlerDyanmodbDynamoDBEventSourceApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21DA529FEC3": {
+   "Type": "AWS::Lambda::EventSourceMapping",
+   "Properties": {
+    "FunctionName": {
+     "Ref": "StreamHandlerDyanmodb1FAA4829"
+    },
+    "BatchSize": 100,
+    "EventSourceArn": {
+     "Fn::GetAtt": [
+      "TodosTable250330D8",
+      "StreamArn"
+     ]
+    },
+    "StartingPosition": "LATEST"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/StreamHandlerDyanmodb/DynamoDBEventSource:ApnaAppsyncDynamodbIndexQueriesStackTodosTable154AD21D/Resource"
+   }
+  },
+  "AppsyncTodoHandlerServiceRoleF32CB4D0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole/Resource"
+   }
+  },
+  "AppsyncTodoHandlerServiceRoleDefaultPolicy52B1EBC6": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "dynamodb:*",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "TodosTable250330D8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "TodosTable250330D8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "AppsyncTodoHandlerServiceRoleDefaultPolicy52B1EBC6",
+    "Roles": [
+     {
+      "Ref": "AppsyncTodoHandlerServiceRoleF32CB4D0"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "AppsyncTodoHandler9E3CDF55": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "9f7b825e7048520c04dc89ad6b8b9745629f855b18a3d91c6679b6fb14196dbe.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "AppsyncTodoHandlerServiceRoleF32CB4D0",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "TODOS_TABLE": {
+       "Ref": "TodosTable250330D8"
+      },
+      "TODOS_TITLE_YEAR_INDEX": "Todos-Title-Year-Index",
+      "TODOS_YEAR_INDEX": "Todos-Year-Index"
+     }
+    },
+    "Handler": "main.handler",
+    "MemorySize": 1024,
+    "Runtime": "nodejs16.x"
+   },
+   "DependsOn": [
+    "AppsyncTodoHandlerServiceRoleDefaultPolicy52B1EBC6",
+    "AppsyncTodoHandlerServiceRoleF32CB4D0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/AppsyncTodoHandler/Resource",
+    "aws:asset:path": "asset.9f7b825e7048520c04dc89ad6b8b9745629f855b18a3d91c6679b6fb14196dbe",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/2VQTXODIBT8LbnjS03SQ29N0o9D05lWe888gUYighW04zD+9wI6tjM97b5d4C27AbfdwWaF3yahrEqkKMDlFmlFvHR22DRmUBTc8VM9t9iU76d9I8jvlNOS1xgEr7/wIbAHtJjrrqU8TBk3Wva8HYnAGlym5SQHfNNS0HhnYiNhg8JaM5/iA4vpZCQjkVgXDME9dYpaoVWwFv7Yc2Wnna8+s1CXYP9XR2K2ZzSGWwP7AH6GQ0crbg9o/JaQNiaPrm/iMr+1GJ4ftWIi7B3JbQppgrIpEW5W93ON64BzdbPpYl9fMrR3ij/509JS0UiUZhyuZt2nd7DzT16NEEnbKStqDtmEP1mIGHC1AQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ApnaAppsyncDynamodbIndexQueriesStack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-2"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
